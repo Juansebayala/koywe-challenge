@@ -117,14 +117,34 @@ describe('AuthController Integration Tests', () => {
     });
 
     it('should validate input DTO', async () => {
-      const invalidDto = {
-        username: 'invalid-email',
-        password: 'weak',
-      };
+      const invalidDtos = [
+        {
+          username: 'invalid-email',
+          password: 'weak',
+        },
+        {
+          username: 'test@example.com',
+          password: 'onlylowercase123!',
+        },
+        {
+          username: 'test@example.com',
+          password: 'ONLYUPPERCASE123!',
+        },
+        {
+          username: 'test@example.com',
+          password: 'NoNumbers!',
+        },
+        {
+          username: 'test@example.com',
+          password: 'NoSpecial123',
+        },
+      ];
 
-      await expect(
-        controller.register(invalidDto as CreateUserDto),
-      ).rejects.toThrow();
+      for (const invalidDto of invalidDtos) {
+        await expect(
+          controller.register(invalidDto as CreateUserDto),
+        ).rejects.toThrow();
+      }
     });
   });
 
